@@ -14,21 +14,20 @@ let hitTestSourceRequested = false;
 let loadedModel = null;
 let placedModel = null;
 
+let canPlace = false;
+
 const info = document.querySelector("#info");
 
 // =========================
 // モデル設定
 // =========================
 
-// モデルサイズ
 const MODEL_SCALE = 1;
 
-// モデル回転
 const MODEL_ROTATION_X = 0;
 const MODEL_ROTATION_Y = 0;
 const MODEL_ROTATION_Z = 0;
 
-// 高さ補正
 const MODEL_OFFSET_Y = 0.05;
 
 // =========================
@@ -37,7 +36,6 @@ init();
 animate();
 
 function init() {
-
   scene = new THREE.Scene();
 
   camera = new THREE.PerspectiveCamera(
@@ -47,156 +45,74 @@ function init() {
     20
   );
 
-  // ライト
-  const hemiLight = new THREE.HemisphereLight(
-    0xffffff,
-    0xbbbbff,
-    3
-  );
-
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
   scene.add(hemiLight);
 
-  const dirLight = new THREE.DirectionalLight(
-    0xffffff,
-    2
-  );
-
+  const dirLight = new THREE.DirectionalLight(0xffffff, 2);
   dirLight.position.set(1, 2, 1);
-
   scene.add(dirLight);
 
-  // レンダラー
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true
   });
 
-  renderer.setPixelRatio(
-    window.devicePixelRatio
-  );
-
-  renderer.setSize(
-    window.innerWidth,
-    window.innerHeight
-  );
-
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.xr.enabled = true;
 
-  document.body.appendChild(
-    renderer.domElement
-  );
+  document.body.appendChild(renderer.domElement);
 
-  // iOSではARButtonを出さない
   if (!isIOS()) {
-
     checkWebXRSupport();
-
     createARButton();
-
     loadModel();
-
     createReticle();
-
     createController();
-
   }
 
-  window.addEventListener(
-    "resize",
-    onWindowResize
-  );
+  window.addEventListener("resize", onWindowResize);
 }
-
-// =========================
-// iOS判定
-// =========================
 
 function isIOS() {
-
   return (
-    /iPad|iPhone|iPod/.test(
-      navigator.userAgent
-    ) ||
-    (
-      navigator.platform === "MacIntel" &&
-      navigator.maxTouchPoints > 1
-    )
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
   );
-
 }
-
-// =========================
-// WebXR確認
-// =========================
 
 function checkWebXRSupport() {
-
   if (!navigator.xr) {
-
-    info.innerHTML =
-      "<p>このブラウザはWebXRに対応していません。</p>";
-
+    info.innerHTML = "<p>このブラウザはWebXRに対応していません。</p>";
     return;
-
   }
 
-  navigator.xr
-    .isSessionSupported("immersive-ar")
-    .then((supported) => {
-
-      if (supported) {
-
-        info.innerHTML =
-          "<p>Android：画面下のARボタンから起動してください。</p>";
-
-      } else {
-
-        info.innerHTML =
-          "<p>この端末ではARを起動できません。</p>";
-
-      }
-
-    });
-
+  navigator.xr.isSessionSupported("immersive-ar").then((supported) => {
+    if (supported) {
+      info.innerHTML = "<p>Android：画面中央のARボタンから起動してください。</p>";
+    } else {
+      info.innerHTML = "<p>この端末ではARを起動できません。</p>";
+    }
+  });
 }
-
-// =========================
-// ARボタン
-// =========================
 
 function createARButton() {
+  const button = ARButton.createButton(renderer, {
+    requiredFeatures: ["hit-test"]
+  });
 
-  const button = ARButton.createButton(
-    renderer,
-    {
-      requiredFeatures: ["hit-test"]
-    }
-  );
+  button.classList.add("ar-button-center");
 
-  button.classList.add(
-    "ar-button-center"
-  );
-
-  document.body.appendChild(
-    button
-  );
-
+  document.body.appendChild(button);
 }
 
-// =========================
-// モデル読込
-// =========================
-
 function loadModel() {
-
   const loader = new GLTFLoader();
 
   loader.load(
-
     "./model/Statue01.glb?v=3",
 
     (gltf) => {
-
       loadedModel = gltf.scene;
 
       loadedModel.scale.set(
@@ -205,151 +121,73 @@ function loadModel() {
         MODEL_SCALE
       );
 
-      info.innerHTML =
-        "<p>モデル読込完了!</p>";
-
+      info.innerHTML = "<p>ARを開始してください。</p>";
     },
 
     undefined,
 
     (error) => {
-
-      info.innerHTML =
-        "<p>モデル読込失敗。</p>";
-
+      info.innerHTML = "<p>モデル読込失敗。</p>";
       console.error(error);
-
     }
-
   );
-
 }
 
-// =========================
-// 白い輪
-// =========================
-
 function createReticle() {
-
   reticle = new THREE.Mesh(
-
-    new THREE.RingGeometry(
-      0.08,
-      0.1,
-      32
-    ).rotateX(-Math.PI / 2),
-
+    new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2),
     new THREE.MeshBasicMaterial({
-      color: 0xffffff
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.65
     })
-
   );
 
   reticle.matrixAutoUpdate = false;
-
   reticle.visible = false;
 
   scene.add(reticle);
-
 }
-
-// =========================
-// タップ検知
-// =========================
 
 function createController() {
-
-  controller =
-    renderer.xr.getController(0);
-
-  controller.addEventListener(
-    "select",
-    onSelect
-  );
-
+  controller = renderer.xr.getController(0);
+  controller.addEventListener("select", onSelect);
   scene.add(controller);
-
 }
 
-// =========================
-// モデル配置
-// =========================
-
 function onSelect() {
-
-  if (!reticle.visible) {
-
-    info.innerHTML =
-      "<p>白い輪が出てからタップしてください。</p>";
-
-    return;
-
-  }
-
   if (!loadedModel) {
-
-    info.innerHTML =
-      "<p>モデル未読込です。</p>";
-
+    info.innerHTML = "<p>モデルを読み込み中です。</p>";
     return;
-
   }
 
-  // 既存削除
+  if (!canPlace || !reticle.visible) {
+    info.innerHTML = "<p>端末をゆっくり動かして、白い輪を探してください。</p>";
+    return;
+  }
+
   if (placedModel) {
-
     scene.remove(placedModel);
-
     placedModel = null;
-
   }
 
-  placedModel =
-    loadedModel.clone(true);
+  placedModel = loadedModel.clone(true);
 
-  const position =
-    new THREE.Vector3();
+  const position = new THREE.Vector3();
+  const quaternion = new THREE.Quaternion();
+  const scale = new THREE.Vector3();
 
-  const quaternion =
-    new THREE.Quaternion();
+  reticle.matrix.decompose(position, quaternion, scale);
 
-  const scale =
-    new THREE.Vector3();
+  placedModel.position.copy(position);
+  placedModel.position.y += MODEL_OFFSET_Y;
 
-  reticle.matrix.decompose(
-    position,
-    quaternion,
-    scale
-  );
+  placedModel.quaternion.copy(quaternion);
 
-  // 位置
-  placedModel.position.copy(
-    position
-  );
+  placedModel.rotateX(MODEL_ROTATION_X);
+  placedModel.rotateY(MODEL_ROTATION_Y);
+  placedModel.rotateZ(MODEL_ROTATION_Z);
 
-  // 少し浮かせる
-  placedModel.position.y +=
-    MODEL_OFFSET_Y;
-
-  // 床向きに合わせる
-  placedModel.quaternion.copy(
-    quaternion
-  );
-
-  // モデル回転補正
-  placedModel.rotateX(
-    MODEL_ROTATION_X
-  );
-
-  placedModel.rotateY(
-    MODEL_ROTATION_Y
-  );
-
-  placedModel.rotateZ(
-    MODEL_ROTATION_Z
-  );
-
-  // サイズ
   placedModel.scale.set(
     MODEL_SCALE,
     MODEL_SCALE,
@@ -357,153 +195,86 @@ function onSelect() {
   );
 
   placedModel.visible = true;
-
   scene.add(placedModel);
 
-  info.innerHTML =
-    "<p>モデル配置完了。</p>";
-
+  info.innerHTML = "<p>配置完了。端末を動かして観察できます。</p>";
 }
-
-// =========================
-// ループ
-// =========================
 
 function animate() {
-
-  renderer.setAnimationLoop(
-    render
-  );
-
+  renderer.setAnimationLoop(render);
 }
 
-// =========================
-// 描画
-// =========================
-
 function render(timestamp, frame) {
-
   if (frame) {
-
-    const referenceSpace =
-      renderer.xr.getReferenceSpace();
-
-    const session =
-      renderer.xr.getSession();
+    const referenceSpace = renderer.xr.getReferenceSpace();
+    const session = renderer.xr.getSession();
 
     if (!hitTestSourceRequested) {
+      info.innerHTML = "<p>端末をゆっくり動かして、床や机を認識してください。</p>";
 
-      session
-        .requestReferenceSpace(
-          "viewer"
-        )
-        .then((viewerSpace) => {
-
-          session
-            .requestHitTestSource({
-              space: viewerSpace
-            })
-            .then((source) => {
-
-              hitTestSource = source;
-
-            });
-
+      session.requestReferenceSpace("viewer").then((viewerSpace) => {
+        session.requestHitTestSource({
+          space: viewerSpace
+        }).then((source) => {
+          hitTestSource = source;
         });
+      });
 
-      session.addEventListener(
-        "end",
-        () => {
+      session.addEventListener("end", () => {
+        hitTestSourceRequested = false;
+        hitTestSource = null;
+        canPlace = false;
 
-          hitTestSourceRequested =
-            false;
-
-          hitTestSource = null;
-
-          if (reticle) {
-
-            reticle.visible = false;
-
-          }
-
-          if (placedModel) {
-
-            scene.remove(
-              placedModel
-            );
-
-            placedModel = null;
-
-          }
-
-          info.innerHTML =
-            "<p>AR終了。</p>";
-
+        if (reticle) {
+          reticle.visible = false;
         }
-      );
 
-      hitTestSourceRequested =
-        true;
+        if (placedModel) {
+          scene.remove(placedModel);
+          placedModel = null;
+        }
 
+        info.innerHTML = "<p>AR終了。</p>";
+      });
+
+      hitTestSourceRequested = true;
     }
 
     if (hitTestSource) {
+      const hitTestResults = frame.getHitTestResults(hitTestSource);
 
-      const hitTestResults =
-        frame.getHitTestResults(
-          hitTestSource
-        );
-
-      if (
-        hitTestResults.length > 0
-      ) {
-
-        const hit =
-          hitTestResults[0];
-
-        const pose =
-          hit.getPose(
-            referenceSpace
-          );
+      if (hitTestResults.length > 0) {
+        const hit = hitTestResults[0];
+        const pose = hit.getPose(referenceSpace);
 
         reticle.visible = true;
+        reticle.matrix.fromArray(pose.transform.matrix);
 
-        reticle.matrix.fromArray(
-          pose.transform.matrix
-        );
+        canPlace = true;
 
+        if (!placedModel) {
+          info.innerHTML = "<p>白い輪の位置をタップして配置します。</p>";
+        }
       } else {
-
         reticle.visible = false;
+        canPlace = false;
 
+        if (!placedModel) {
+          info.innerHTML = "<p>端末をゆっくり動かして、床や机を認識してください。</p>";
+        }
       }
-
     }
-
   }
 
-  renderer.render(
-    scene,
-    camera
-  );
-
+  renderer.render(scene, camera);
 }
 
-// =========================
-// リサイズ
-// =========================
-
 function onWindowResize() {
-
-  camera.aspect =
-    window.innerWidth /
-    window.innerHeight;
-
+  camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
   renderer.setSize(
     window.innerWidth,
     window.innerHeight
   );
-
 }
