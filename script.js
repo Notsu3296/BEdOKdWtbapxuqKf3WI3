@@ -93,7 +93,7 @@ function loadModel() {
     "./model/Statue01.glb",
     (gltf) => {
       loadedModel = gltf.scene;
-      loadedModel.scale.set(0.3, 0.3, 0.3);
+      loadedModel.scale.set(0.03, 0.03, 0.03);
       loadedModel.rotation.set(Math.PI / 2, 0, 0);
 
       info.innerHTML = "<p>モデル読込完了。ARボタンを押してください。</p>";
