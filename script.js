@@ -156,8 +156,7 @@ function onSelect() {
   placedModel.quaternion.copy(quaternion);
 
   // モデル自体の向き補正
-  placedModel.rotateX(Math.PI / 2);
-  PlacedModel.rotateY(Math.PI / 2);
+  placedModel.rotateX(Math.PI );
 
   placedModel.scale.set(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
   placedModel.visible = true;
