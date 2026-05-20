@@ -8,19 +8,23 @@ body {
 /* 案内表示 */
 #info {
   position: fixed;
+
   left: 50%;
-  bottom: 32px;
+  top: calc(env(safe-area-inset-top) + 18px);
+
   transform: translateX(-50%);
 
   z-index: 10;
 
+  width: min(90vw, 420px);
+
   color: white;
   background: rgba(0, 0, 0, 0.72);
 
-  padding: 14px 22px;
+  padding: 12px 18px;
   border-radius: 999px;
 
-  font-size: 14px;
+  font-size: clamp(12px, 3.5vw, 15px);
   line-height: 1.5;
   text-align: center;
 
