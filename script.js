@@ -188,22 +188,20 @@ function checkWebXRSupport() {
 // =========================
 
 function createARButton() {
-
   const button = ARButton.createButton(
     renderer,
     {
-      requiredFeatures: ["hit-test"]
+      requiredFeatures: ["hit-test"],
+      optionalFeatures: ["dom-overlay"],
+      domOverlay: {
+        root: document.body
+      }
     }
   );
 
-  button.classList.add(
-    "ar-button-center"
-  );
+  button.classList.add("ar-button-center");
 
-  document.body.appendChild(
-    button
-  );
-
+  document.body.appendChild(button);
 }
 
 // =========================
