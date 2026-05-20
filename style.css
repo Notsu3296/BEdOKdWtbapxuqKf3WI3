@@ -2,22 +2,33 @@ body {
   margin: 0;
   overflow: hidden;
   font-family: sans-serif;
-  background: #000;
+  background: #050505;
 }
 
+/* 案内表示 */
 #info {
   position: fixed;
-  top: 16px;
-  left: 16px;
-  right: 16px;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+
   z-index: 10;
+
   color: white;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 12px;
-  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.72);
+
+  padding: 14px 22px;
+  border-radius: 999px;
+
   font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
+/* iPhone / iPad用ボタンの配置 */
 #ios-ar {
   position: fixed;
   inset: 0;
@@ -26,12 +37,19 @@ body {
   z-index: 20;
 }
 
+/* iPhone / iPad用ボタン */
 #ios-ar-button {
-  font-size: 24px;
-  padding: 20px 40px;
-  border-radius: 12px;
+  font-size: 22px;
+  font-weight: bold;
+
+  padding: 18px 42px;
+
+  border-radius: 999px;
   border: none;
+
   background: white;
   color: black;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   cursor: pointer;
 }
