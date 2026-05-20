@@ -14,6 +14,8 @@ let hitTestSourceRequested = false;
 let loadedModel = null;
 let placedModel = null;
 
+const info = document.querySelector("#info");
+
 init();
 animate();
 
@@ -27,45 +29,61 @@ function init() {
     20
   );
 
-  const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
-  scene.add(light);
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
+  scene.add(hemiLight);
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-  directionalLight.position.set(1, 2, 1);
-  scene.add(directionalLight);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 2);
+  dirLight.position.set(1, 2, 1);
+  scene.add(dirLight);
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true
   });
 
+  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.xr.enabled = true;
 
   document.body.appendChild(renderer.domElement);
 
-  document.body.appendChild(
-    ARButton.createButton(renderer, {
-      requiredFeatures: ["hit-test"]
-    })
-  );
+  checkWebXRSupport();
+  createARButton();
 
   loadModel();
-
-  reticle = new THREE.Mesh(
-    new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2),
-    new THREE.MeshBasicMaterial()
-  );
-
-  reticle.matrixAutoUpdate = false;
-  reticle.visible = false;
-  scene.add(reticle);
-
-  controller = renderer.xr.getController(0);
-  controller.addEventListener("select", onSelect);
-  scene.add(controller);
+  createReticle();
+  createController();
 
   window.addEventListener("resize", onWindowResize);
+}
+
+function checkWebXRSupport() {
+  if (!navigator.xr) {
+    info.innerHTML = "<p>このブラウザはWebXRに対応していません。</p>";
+    return;
+  }
+
+  navigator.xr.isSessionSupported("immersive-ar").then((supported) => {
+    if (supported) {
+      info.innerHTML = "<p>AR対応しています。画面下のARボタンを押してください。</p>";
+    } else {
+      info.innerHTML = "<p>この端末・ブラウザではARを起動できません。</p>";
+    }
+  });
+}
+
+function createARButton() {
+  const button = ARButton.createButton(renderer, {
+    requiredFeatures: ["hit-test"]
+  });
+
+  button.style.position = "fixed";
+  button.style.bottom = "24px";
+  button.style.left = "50%";
+  button.style.transform = "translateX(-50%)";
+  button.style.zIndex = "9999";
+
+  document.body.appendChild(button);
 }
 
 function loadModel() {
@@ -79,18 +97,46 @@ function loadModel() {
       loadedModel.scale.set(0.3, 0.3, 0.3);
       loadedModel.rotation.set(Math.PI / 2, 0, 0);
 
+      info.innerHTML = "<p>モデル読込完了。ARボタンを押してください。</p>";
       console.log("GLB loaded");
     },
     undefined,
     (error) => {
+      info.innerHTML = "<p>モデル読込に失敗しました。model/Statue01.glb を確認してください。</p>";
       console.error("GLB load error:", error);
     }
   );
 }
 
+function createReticle() {
+  reticle = new THREE.Mesh(
+    new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({
+      color: 0xffffff
+    })
+  );
+
+  reticle.matrixAutoUpdate = false;
+  reticle.visible = false;
+  scene.add(reticle);
+}
+
+function createController() {
+  controller = renderer.xr.getController(0);
+  controller.addEventListener("select", onSelect);
+  scene.add(controller);
+}
+
 function onSelect() {
-  if (!reticle.visible) return;
-  if (!loadedModel) return;
+  if (!reticle.visible) {
+    info.innerHTML = "<p>床や机に白い輪が出てからタップしてください。</p>";
+    return;
+  }
+
+  if (!loadedModel) {
+    info.innerHTML = "<p>モデルをまだ読み込めていません。</p>";
+    return;
+  }
 
   if (!placedModel) {
     placedModel = loadedModel.clone(true);
@@ -101,7 +147,6 @@ function onSelect() {
   placedModel.quaternion.setFromRotationMatrix(reticle.matrix);
   placedModel.visible = true;
 
-  const info = document.querySelector("#info");
   info.innerHTML = "<p>モデルを配置しました。端末を動かして観察できます。</p>";
 }
 
@@ -124,6 +169,7 @@ function render(timestamp, frame) {
       session.addEventListener("end", () => {
         hitTestSourceRequested = false;
         hitTestSource = null;
+        reticle.visible = false;
       });
 
       hitTestSourceRequested = true;
@@ -150,6 +196,5 @@ function render(timestamp, frame) {
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
