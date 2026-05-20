@@ -24,15 +24,12 @@
 
   <!-- iPhone / iPad 用 -->
   <div id="ios-ar" style="display: none;">
-    <a rel="ar" href="./model/Statue01.usdz">
+    <a rel="ar" href="./model/Statue01.usdz?v=1">
       <button id="ios-ar-button">
         ARで見る
       </button>
     </a>
   </div>
-
-  <!-- Android WebXR 用 -->
-  <script type="module" src="script.js?v=33"></script>
 
   <script>
     const isIOS =
@@ -43,11 +40,14 @@
     const iosAr = document.getElementById("ios-ar");
 
     if (isIOS) {
-      iosAr.style.display = "block";
-      info.innerHTML = "<p>iPhone / iPad：ボタンを押してARを起動してください。</p>";
+      iosAr.style.display = "grid";
+      info.innerHTML = "<p>ボタンを押してARを起動してください。</p>";
     } else {
-      info.innerHTML = "<p>Android：画面下のARボタンから起動してください。</p>";
+      info.innerHTML = "<p>画面中央のARボタンから起動してください。</p>";
     }
   </script>
+
+  <!-- Android WebXR 用 -->
+  <script type="module" src="script.js?v=35"></script>
 </body>
 </html>
