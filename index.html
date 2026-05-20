@@ -4,11 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>AR Cube Test</title>
+  <title>WebAR Test Project</title>
 
   <link rel="stylesheet" href="style.css">
 
+  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <!-- MindAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 </head>
 
@@ -16,23 +19,58 @@
   <a-scene
     mindar-image="imageTargetSrc: ./img/targets.mind;"
     color-space="sRGB"
-    renderer="colorManagement: true, physicallyCorrectLights"
+    renderer="colorManagement: true, physicallyCorrectLights: true"
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: false"
   >
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
- <a-entity id="target" mindar-image-target="targetIndex: 0">
+    <!-- カメラ -->
+    <a-camera
+      position="0 0 0"
+      look-controls="enabled: false"
+    ></a-camera>
 
-  <a-gltf-model
-    id="model"
-    src="./model/Statue01.glb"
-    position="0 0 0"
-    scale="0.3 0.3 0.3"
-    rotation="90 0 0"
-  ></a-gltf-model>
+    <!-- ライト -->
+    <a-light
+      type="ambient"
+      intensity="1.2"
+    ></a-light>
 
-</a-entity>
+    <a-light
+      type="directional"
+      position="1 2 1"
+      intensity="1"
+    ></a-light>
+
+    <!-- マーカー追従用 -->
+    <a-entity
+      id="target"
+      mindar-image-target="targetIndex: 0"
+    >
+      <a-gltf-model
+        id="trackedModel"
+        src="./model/Statue01.glb"
+        position="0 0 0"
+        scale="0.3 0.3 0.3"
+        rotation="90 0 0"
+        visible="true"
+      ></a-gltf-model>
+    </a-entity>
+
+    <!-- 疑似固定表示用 -->
+    <a-entity
+      id="fixedRoot"
+      visible="false"
+    >
+      <a-gltf-model
+        id="fixedModel"
+        src="./model/Statue01.glb"
+        position="0 0 0"
+        scale="0.3 0.3 0.3"
+        rotation="90 0 0"
+      ></a-gltf-model>
+    </a-entity>
+
   </a-scene>
 
   <script src="script.js"></script>
