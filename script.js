@@ -17,7 +17,7 @@ let placedModel = null;
 const info = document.querySelector("#info");
 
 // モデルサイズ調整
-const MODEL_SCALE = 0.03;
+const MODEL_SCALE = 1;
 
 // モデルの向き調整
 const MODEL_ROTATION_X = 0;
