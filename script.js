@@ -1,20 +1,29 @@
 const target = document.querySelector("#target");
-const model = document.querySelector("#model");
+const trackedModel = document.querySelector("#trackedModel");
+const fixedModel = document.querySelector("#fixedModel");
 
-let hasFound = false;
+let isFixed = false;
 
 target.addEventListener("targetFound", () => {
-    console.log("Marker Found");
+  console.log("Marker Found");
 
-    hasFound = true;
+  if (isFixed) return;
 
-    model.setAttribute("visible", true);
-});
+  trackedModel.setAttribute("visible", true);
 
-target.addEventListener("targetLost", () => {
-    console.log("Marker Lost");
+  const trackedObject = trackedModel.object3D;
+  const fixedObject = fixedModel.object3D;
 
-    if (hasFound) {
-        model.setAttribute("visible", true);
-    }
+  trackedObject.updateMatrixWorld(true);
+
+  trackedObject.getWorldPosition(fixedObject.position);
+  trackedObject.getWorldQuaternion(fixedObject.quaternion);
+  trackedObject.getWorldScale(fixedObject.scale);
+
+  fixedModel.setAttribute("visible", true);
+  trackedModel.setAttribute("visible", false);
+
+  isFixed = true;
+
+  console.log("Model Fixed");
 });
