@@ -16,6 +16,9 @@ let placedModel = null;
 
 const info = document.querySelector("#info");
 
+// モデルサイズ調整
+const MODEL_SCALE = 0.03;
+
 init();
 animate();
 
@@ -93,7 +96,8 @@ function loadModel() {
     "./model/Statue01.glb",
     (gltf) => {
       loadedModel = gltf.scene;
-      loadedModel.scale.set(0.003, 0.003, 0.003);
+
+      loadedModel.scale.set(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
       loadedModel.rotation.set(Math.PI / 2, 0, 0);
 
       info.innerHTML = "<p>モデル読込完了。ARボタンを押してください。</p>";
@@ -134,14 +138,30 @@ function onSelect() {
     return;
   }
 
-  if (!placedModel) {
-    placedModel = loadedModel.clone(true);
-    scene.add(placedModel);
+  // すでに配置済みなら一度削除
+  if (placedModel) {
+    scene.remove(placedModel);
+    placedModel = null;
   }
 
-  placedModel.position.setFromMatrixPosition(reticle.matrix);
-  placedModel.quaternion.setFromRotationMatrix(reticle.matrix);
+  placedModel = loadedModel.clone(true);
+
+  const position = new THREE.Vector3();
+  const quaternion = new THREE.Quaternion();
+  const scale = new THREE.Vector3();
+
+  reticle.matrix.decompose(position, quaternion, scale);
+
+  placedModel.position.copy(position);
+  placedModel.quaternion.copy(quaternion);
+
+  // モデル自体の向き補正
+  placedModel.rotateX(Math.PI / 2);
+
+  placedModel.scale.set(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
   placedModel.visible = true;
+
+  scene.add(placedModel);
 
   info.innerHTML = "<p>モデルを配置しました。端末を動かして観察できます。</p>";
 }
@@ -165,7 +185,17 @@ function render(timestamp, frame) {
       session.addEventListener("end", () => {
         hitTestSourceRequested = false;
         hitTestSource = null;
-        reticle.visible = false;
+
+        if (reticle) {
+          reticle.visible = false;
+        }
+
+        if (placedModel) {
+          scene.remove(placedModel);
+          placedModel = null;
+        }
+
+        info.innerHTML = "<p>ARを終了しました。</p>";
       });
 
       hitTestSourceRequested = true;
