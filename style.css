@@ -5,7 +5,7 @@ body {
   background: #050505;
 }
 
-/* 案内表示 */
+/* 上部メッセージ */
 #info {
   position: fixed;
 
@@ -32,16 +32,18 @@ body {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
-/* iPhone / iPad用ボタンの配置 */
+/* iPhone / iPad用 */
 #ios-ar {
   position: fixed;
   inset: 0;
+
   display: grid;
   place-items: center;
+
   z-index: 20;
 }
 
-/* iPhone / iPad用ボタン */
+/* iPhone / iPadボタン */
 #ios-ar-button {
   font-size: 22px;
   font-weight: bold;
@@ -55,5 +57,24 @@ body {
   color: black;
 
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+
   cursor: pointer;
+}
+
+/* Android ARButton */
+.ar-button-center {
+  position: fixed !important;
+
+  left: 50% !important;
+  bottom: 50% !important;
+
+  transform:
+    translate(-50%, 50%) !important;
+
+  z-index: 9999 !important;
+}
+
+/* canvas */
+canvas {
+  display: block;
 }
