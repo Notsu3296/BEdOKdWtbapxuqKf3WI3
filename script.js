@@ -1,0 +1,1 @@
+console.log("JavaScript 接続OK")
