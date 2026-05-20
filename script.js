@@ -173,18 +173,13 @@ function createARButton() {
     }
   );
 
-  button.style.position = "fixed";
+  button.classList.add(
+    "ar-button-center"
+  );
 
-  button.style.bottom = "24px";
-
-  button.style.left = "50%";
-
-  button.style.transform =
-    "translateX(-50%)";
-
-  button.style.zIndex = "9999";
-
-  document.body.appendChild(button);
+  document.body.appendChild(
+    button
+  );
 
 }
 
