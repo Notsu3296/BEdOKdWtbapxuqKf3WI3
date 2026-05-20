@@ -15,8 +15,20 @@ let loadedModel = null;
 let placedModel = null;
 
 let canPlace = false;
+let currentMessage = "";
 
 const info = document.querySelector("#info");
+
+function setInfo(message) {
+
+  if (currentMessage === message) {
+    return;
+  }
+
+  currentMessage = message;
+
+  info.innerHTML = `<p>${message}</p>`;
+}
 
 // =========================
 // モデル設定
