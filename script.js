@@ -188,6 +188,7 @@ function checkWebXRSupport() {
 // =========================
 
 function createARButton() {
+
   const button = ARButton.createButton(
     renderer,
     {
@@ -199,9 +200,18 @@ function createARButton() {
     }
   );
 
-  button.classList.add("ar-button-center");
+  // Stop AR を消す
+  button.style.display = "none";
 
-  document.body.appendChild(button);
+  // 独自クラス
+  button.classList.add(
+    "ar-button-center"
+  );
+
+  document.body.appendChild(
+    button
+  );
+
 }
 
 // =========================
