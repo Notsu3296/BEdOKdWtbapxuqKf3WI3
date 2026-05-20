@@ -211,7 +211,7 @@ function loadModel() {
       );
 
       info.innerHTML =
-        "<p>モデル読込完了 !</p>";
+        "<p>モデル読込完了!</p>";
 
     },
 
