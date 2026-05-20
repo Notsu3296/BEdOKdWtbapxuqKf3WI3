@@ -19,10 +19,34 @@
 </head>
 
 <body>
-  <div id="info">
-    <p>ARを開始して、床や机をタップしてください</p>
+  <div id="info"></div>
+
+  <!-- iPhone / iPad 用 -->
+  <div id="ios-ar" style="display: none;">
+    <a rel="ar" href="./model/Statue01.usdz">
+      <button id="ios-ar-button">
+        ARで見る
+      </button>
+    </a>
   </div>
 
-  <script type="module" src="script.js?v=15"></script>
+  <!-- Android WebXR 用 -->
+  <script type="module" src="script.js?v=26"></script>
+
+  <script>
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+    const info = document.getElementById("info");
+    const iosAr = document.getElementById("ios-ar");
+
+    if (isIOS) {
+      iosAr.style.display = "block";
+      info.innerHTML = "<p>iPhone / iPad：ボタンを押してARを起動してください。</p>";
+    } else {
+      info.innerHTML = "<p>Android：画面下のARボタンから起動してください。</p>";
+    }
+  </script>
 </body>
 </html>
