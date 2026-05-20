@@ -17,3 +17,21 @@ body {
   border-radius: 8px;
   font-size: 14px;
 }
+
+#ios-ar {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 20;
+}
+
+#ios-ar-button {
+  font-size: 24px;
+  padding: 20px 40px;
+  border-radius: 12px;
+  border: none;
+  background: white;
+  color: black;
+  cursor: pointer;
+}
