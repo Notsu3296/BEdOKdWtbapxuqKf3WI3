@@ -1,4 +1,4 @@
-import * as THREE from "three";
+.import * as THREE from "three";
 import { ARButton } from "three/addons/webxr/ARButton.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
@@ -112,7 +112,7 @@ function loadModel() {
 
 function createReticle() {
   reticle = new THREE.Mesh(
-    new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2),
+    new THREE.RingGeometry(0.08, 0.1, 32).rotateX(Math.PI / 2),
     new THREE.MeshBasicMaterial({ color: 0xffffff })
   );
 
