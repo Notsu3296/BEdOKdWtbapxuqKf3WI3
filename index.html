@@ -7,13 +7,22 @@
   <title>WebAR Test Project</title>
 
   <link rel="stylesheet" href="style.css">
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 
 <body>
   <div id="info">
-    <p>ARを開始して、床や机をタップしてくださいccc</p>
+    <p>ARを開始して、床や机をタップしてください</p>
   </div>
 
-  <script type="module" src="script.js"></script>
+  <script type="module" src="script.js?v=4"></script>
 </body>
 </html>
