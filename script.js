@@ -1,4 +1,4 @@
-import * as THREE from "three";
+#import * as THREE from "three";
 import { ARButton } from "three/addons/webxr/ARButton.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
@@ -20,7 +20,7 @@ const info = document.querySelector("#info");
 const MODEL_SCALE = 0.03;
 
 // モデルの向き調整
-const MODEL_ROTATION_X = -Math.PI / 2;
+const MODEL_ROTATION_X = 0;
 
 init();
 animate();
