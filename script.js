@@ -157,6 +157,7 @@ function onSelect() {
 
   // モデル自体の向き補正
   placedModel.rotateX(Math.PI / 2);
+  PlacedModel.rotateY(Math.PI / 2);
 
   placedModel.scale.set(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
   placedModel.visible = true;
