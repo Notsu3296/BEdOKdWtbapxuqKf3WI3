@@ -31,7 +31,7 @@ const MODEL_ROTATION_X = 0;
 const MODEL_ROTATION_Y = 0;
 const MODEL_ROTATION_Z = 0;
 
-const MODEL_OFFSET_Y = 0.05;
+const MODEL_OFFSET_Y = 0;
 
 // =========================
 
