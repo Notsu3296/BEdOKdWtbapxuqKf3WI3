@@ -32,10 +32,10 @@ const MODEL_ROTATION_Z = 0;
 const MODEL_OFFSET_Y = 0.05;
 
 const MODEL_FILES = [
-  "889_1",
-  "889_2",
+  "889_4",
   "889_3",
-  "889_4"
+  "889_2",
+  "889_1"
 ];
 
 const loadedModels = {};
@@ -271,49 +271,86 @@ function onSelect() {
 }
 
 function createLayerButtons() {
-  layerButtonsContainer = document.createElement("div");
-  layerButtonsContainer.id = "layer-buttons";
+
+  layerButtonsContainer =
+    document.createElement("div");
+
+  layerButtonsContainer.id =
+    "layer-buttons";
 
   MODEL_FILES.forEach((name, index) => {
-    const button = document.createElement("button");
 
-    button.className = "layer-button active";
-    button.textContent = `Layer ${index + 1}`;
-    button.dataset.layer = index;
+    const button =
+      document.createElement("button");
 
-    button.addEventListener("pointerdown", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
+    button.className =
+      "layer-button";
 
-      uiTouched = true;
+    button.textContent =
+      name;
 
-      setTimeout(() => {
-        uiTouched = false;
-      }, 300);
-    });
+    button.dataset.layer =
+      index;
 
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
+    // 初期状態は表示中
+    button.classList.remove(
+      "inactive"
+    );
 
-      if (!placedGroup) {
-        return;
+    button.addEventListener(
+      "pointerdown",
+      (event) => {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        uiTouched = true;
+
+        setTimeout(() => {
+
+          uiTouched = false;
+
+        }, 300);
+
       }
+    );
 
-      const model = placedGroup.children[index];
+    button.addEventListener(
+      "click",
+      (event) => {
 
-      model.visible = !model.visible;
+        event.preventDefault();
+        event.stopPropagation();
 
-      button.classList.toggle(
-        "active",
-        model.visible
-      );
-    });
+        if (!placedGroup) {
+          return;
+        }
 
-    layerButtonsContainer.appendChild(button);
+        const model =
+          placedGroup.children[index];
+
+        model.visible =
+          !model.visible;
+
+        // 非表示時だけ半透明
+        button.classList.toggle(
+          "inactive",
+          !model.visible
+        );
+
+      }
+    );
+
+    layerButtonsContainer.appendChild(
+      button
+    );
+
   });
 
-  document.body.appendChild(layerButtonsContainer);
+  document.body.appendChild(
+    layerButtonsContainer
+  );
+
 }
 
 function showLayerButtons() {
@@ -329,16 +366,24 @@ function hideLayerButtons() {
 }
 
 function resetLayerButtonStates() {
+
   if (!layerButtonsContainer) {
     return;
   }
 
   const buttons =
-    layerButtonsContainer.querySelectorAll(".layer-button");
+    layerButtonsContainer.querySelectorAll(
+      ".layer-button"
+    );
 
   buttons.forEach((button) => {
-    button.classList.add("active");
+
+    button.classList.remove(
+      "inactive"
+    );
+
   });
+
 }
 
 function animate() {
