@@ -137,7 +137,13 @@ function createARButton() {
     }
   });
 
-  arButton.classList.add("ar-start-button");
+  // モデル読込完了までは押せない状態にする
+  arButton.classList.add(
+    "ar-start-button",
+    "ar-loading"
+  );
+
+  arButton.textContent = "LOADING...";
 
   arButton.addEventListener("click", () => {
     arButton.classList.remove("ar-start-button");
@@ -158,6 +164,7 @@ function loadModel() {
     "./model/Statue01.glb?v=3",
 
     (gltf) => {
+
       loadedModel = gltf.scene;
 
       loadedModel.scale.set(
@@ -166,14 +173,34 @@ function loadModel() {
         MODEL_SCALE
       );
 
-      setInfo("3Dモデル読み込み完了。<br>ARを開始してください。");
+      // 読み込み完了でボタン有効化
+      if (arButton) {
+
+        arButton.classList.remove(
+          "ar-loading"
+        );
+
+        arButton.textContent =
+          "START AR";
+
+      }
+
+      setInfo(
+        "3Dモデル読み込み完了。<br>ARを開始してください。"
+      );
+
     },
 
     undefined,
 
     (error) => {
-      setInfo("モデル読込失敗。");
+
+      setInfo(
+        "モデル読込失敗。"
+      );
+
       console.error(error);
+
     }
   );
 }
