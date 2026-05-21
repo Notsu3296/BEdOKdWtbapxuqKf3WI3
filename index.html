@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex">
 
-  <title>WebAR Test Project</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <link rel="stylesheet" href="style.css">
+  <meta
+    name="robots"
+    content="noindex"
+  >
+
+  <title>
+    WebAR Layer Viewer
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 
   <script type="importmap">
   {
@@ -17,37 +32,82 @@
     }
   }
   </script>
+
 </head>
 
 <body>
+
+  <!-- 上部メッセージ -->
+
   <div id="info"></div>
 
   <!-- iPhone / iPad 用 -->
-  <div id="ios-ar" style="display: none;">
-    <a rel="ar" href="./model/Statue01.usdz?v=1">
+
+  <div
+    id="ios-ar"
+    style="display: none;"
+  >
+
+    <a
+      rel="ar"
+      href="./model/889_all.usdz"
+    >
+
       <button id="ios-ar-button">
         ARで見る
       </button>
+
     </a>
+
   </div>
 
-  <script>
-    const isIOS =
-      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  <!-- Android WebXR -->
 
-    const info = document.getElementById("info");
-    const iosAr = document.getElementById("ios-ar");
+  <script
+    type="module"
+    src="script.js?v=50"
+  ></script>
+
+  <!-- iOS判定 -->
+
+  <script>
+
+    const isIOS =
+      /iPad|iPhone|iPod/.test(
+        navigator.userAgent
+      ) ||
+      (
+        navigator.platform === "MacIntel" &&
+        navigator.maxTouchPoints > 1
+      );
+
+    const info =
+      document.getElementById(
+        "info"
+      );
+
+    const iosAr =
+      document.getElementById(
+        "ios-ar"
+      );
 
     if (isIOS) {
-      iosAr.style.display = "grid";
-      info.innerHTML = "<p>ボタンを押してARを起動してください。</p>";
+
+      iosAr.style.display =
+        "block";
+
+      info.innerHTML =
+        "<p>iPhone / iPad<br>ARボタンを押してください</p>";
+
     } else {
-      info.innerHTML = "<p>画面中央のARボタンから起動してください。</p>";
+
+      info.innerHTML =
+        "<p>Android<br>3Dモデルを読み込み中...</p>";
+
     }
+
   </script>
 
-  <!-- Android WebXR 用 -->
-  <script type="module" src="script.js?v=45"></script>
 </body>
+
 </html>
