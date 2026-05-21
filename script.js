@@ -31,6 +31,9 @@ const MODEL_ROTATION_Z = 0;
 
 const MODEL_OFFSET_Y = 0.05;
 
+/*
+  上から 4 → 3 → 2 → 1 の順番
+*/
 const MODEL_FILES = [
   "889_4",
   "889_3",
@@ -39,6 +42,17 @@ const MODEL_FILES = [
 ];
 
 const loadedModels = {};
+
+/*
+  配置前：どのレイヤーを配置するかの予約
+  配置後：実際の表示/非表示状態
+*/
+const layerVisibleStates = {
+  "889_4": false,
+  "889_3": false,
+  "889_2": false,
+  "889_1": true
+};
 
 init();
 animate();
@@ -213,7 +227,6 @@ function onSelect() {
     return;
   }
 
-  // すでに配置済みなら、以降のタップでは再配置しない
   if (placedGroup) {
     return;
   }
@@ -231,10 +244,22 @@ function onSelect() {
   placedGroup = new THREE.Group();
 
   MODEL_FILES.forEach((name) => {
+    if (!layerVisibleStates[name]) {
+      return;
+    }
+
     const clone = loadedModels[name].clone(true);
     clone.visible = true;
+    clone.name = name;
+
     placedGroup.add(clone);
   });
+
+  if (placedGroup.children.length === 0) {
+    setInfo("表示するレイヤーを選んでください。");
+    placedGroup = null;
+    return;
+  }
 
   const position = new THREE.Vector3();
   const quaternion = new THREE.Quaternion();
@@ -263,94 +288,74 @@ function onSelect() {
 
   scene.add(placedGroup);
 
-  resetLayerButtonStates();
-
   setInfo(
     "配置完了。<br>右側ボタンで表示切替できます。"
   );
 }
 
 function createLayerButtons() {
+  layerButtonsContainer = document.createElement("div");
+  layerButtonsContainer.id = "layer-buttons";
 
-  layerButtonsContainer =
-    document.createElement("div");
+  MODEL_FILES.forEach((name) => {
+    const button = document.createElement("button");
 
-  layerButtonsContainer.id =
-    "layer-buttons";
+    button.className = "layer-button";
+    button.textContent = name;
+    button.dataset.layer = name;
 
-  MODEL_FILES.forEach((name, index) => {
-
-    const button =
-      document.createElement("button");
-
-    button.className =
-      "layer-button";
-
-    button.textContent =
-      name;
-
-    button.dataset.layer =
-      index;
-
-    // 初期状態は表示中
-    button.classList.remove(
-      "inactive"
+    button.classList.toggle(
+      "inactive",
+      !layerVisibleStates[name]
     );
 
-    button.addEventListener(
-      "pointerdown",
-      (event) => {
+    button.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-        event.preventDefault();
-        event.stopPropagation();
+      uiTouched = true;
 
-        uiTouched = true;
+      setTimeout(() => {
+        uiTouched = false;
+      }, 300);
+    });
 
-        setTimeout(() => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-          uiTouched = false;
+      layerVisibleStates[name] = !layerVisibleStates[name];
 
-        }, 300);
+      button.classList.toggle(
+        "inactive",
+        !layerVisibleStates[name]
+      );
 
+      if (!placedGroup) {
+        return;
       }
-    );
 
-    button.addEventListener(
-      "click",
-      (event) => {
+      const existingModel = placedGroup.getObjectByName(name);
 
-        event.preventDefault();
-        event.stopPropagation();
+      if (layerVisibleStates[name]) {
+        if (!existingModel) {
+          const clone = loadedModels[name].clone(true);
+          clone.visible = true;
+          clone.name = name;
 
-        if (!placedGroup) {
-          return;
+          placedGroup.add(clone);
         }
-
-        const model =
-          placedGroup.children[index];
-
-        model.visible =
-          !model.visible;
-
-        // 非表示時だけ半透明
-        button.classList.toggle(
-          "inactive",
-          !model.visible
-        );
-
+      } else {
+        if (existingModel) {
+          placedGroup.remove(existingModel);
+        }
       }
-    );
+    });
 
-    layerButtonsContainer.appendChild(
-      button
-    );
-
+    layerButtonsContainer.appendChild(button);
   });
 
-  document.body.appendChild(
-    layerButtonsContainer
-  );
-
+  document.body.appendChild(layerButtonsContainer);
 }
 
 function showLayerButtons() {
@@ -363,27 +368,6 @@ function hideLayerButtons() {
   if (layerButtonsContainer) {
     layerButtonsContainer.style.display = "none";
   }
-}
-
-function resetLayerButtonStates() {
-
-  if (!layerButtonsContainer) {
-    return;
-  }
-
-  const buttons =
-    layerButtonsContainer.querySelectorAll(
-      ".layer-button"
-    );
-
-  buttons.forEach((button) => {
-
-    button.classList.remove(
-      "inactive"
-    );
-
-  });
-
 }
 
 function animate() {
@@ -428,13 +412,14 @@ function render(timestamp, frame) {
         const pose = hit.getPose(referenceSpace);
 
         reticle.visible = !placedGroup;
+
         reticle.matrix.fromArray(pose.transform.matrix);
 
         canPlace = true;
 
         if (!placedGroup) {
           setInfo(
-            "白い輪の位置をタップして<br>配置します"
+            "表示するレイヤーを選んで<br>白い輪の位置をタップします"
           );
         }
       } else {
