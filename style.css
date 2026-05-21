@@ -25,12 +25,10 @@ body {
   background: rgba(0, 0, 0, 0.72);
 
   padding: 12px 18px;
-
   border-radius: 999px;
 
   font-size: clamp(12px, 3.5vw, 15px);
   line-height: 1.5;
-
   text-align: center;
 
   backdrop-filter: blur(10px);
@@ -55,7 +53,7 @@ body {
 }
 
 /* =========================
-   iPhone ボタン
+   iPhone / iPad AR開始ボタン
 ========================= */
 
 #ios-ar-button {
@@ -77,48 +75,53 @@ body {
 }
 
 /* =========================
-   Android AR開始ボタン
+   Android ARボタン共通
 ========================= */
 
-.ar-button-center {
+#ARButton {
   position: fixed !important;
 
   left: 50% !important;
-  bottom: 18% !important;
-
-  transform: translateX(-50%) !important;
-
-  z-index: 9999 !important;
-}
-
-/* =========================
-   Stop AR ボタン
-========================= */
-
-#ARButton,
-button#ARButton,
-button[style*="position"] {
-
-  position: fixed !important;
-
-  top: calc(env(safe-area-inset-top) + 12px) !important;
-  right: 12px !important;
-
-  left: auto !important;
-  bottom: auto !important;
-
-  transform: none !important;
 
   width: auto !important;
   height: auto !important;
 
-  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  border: none !important;
 
-  font-size: 11px !important;
+  background: white !important;
+  color: black !important;
 
-  opacity: 0.45 !important;
+  font-weight: bold !important;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.45) !important;
 
   z-index: 9999 !important;
+}
+
+/* AR開始前：画面中央 */
+#ARButton.ar-start-button {
+  top: 50% !important;
+  bottom: auto !important;
+
+  transform: translate(-50%, -50%) !important;
+
+  padding: 18px 42px !important;
+  font-size: 22px !important;
+  opacity: 1 !important;
+}
+
+/* AR起動中：画面下部中央 */
+#ARButton.ar-stop-button {
+  top: auto !important;
+  bottom: calc(env(safe-area-inset-bottom) + 24px) !important;
+
+  transform: translateX(-50%) !important;
+
+  padding: 10px 18px !important;
+  font-size: 13px !important;
+  opacity: 0.72 !important;
 }
 
 /* =========================
