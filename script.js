@@ -427,7 +427,7 @@ function render(timestamp, frame) {
         const hit = hitTestResults[0];
         const pose = hit.getPose(referenceSpace);
 
-        reticle.visible = true;
+        reticle.visible = !placedGroup;
         reticle.matrix.fromArray(pose.transform.matrix);
 
         canPlace = true;
