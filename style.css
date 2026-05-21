@@ -5,18 +5,12 @@ body {
   background: #050505;
 }
 
-/* =========================
-   上部メッセージ
-========================= */
-
+/* 上部メッセージ */
 #info {
   position: fixed;
-
   left: 50%;
   top: calc(env(safe-area-inset-top) + 18px);
-
   transform: translateX(-50%);
-
   z-index: 20;
 
   width: min(90vw, 420px);
@@ -32,15 +26,10 @@ body {
   text-align: center;
 
   backdrop-filter: blur(10px);
-
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
-/* =========================
-   レイヤー切替ボタン
-========================= */
-
+/* レイヤー切替ボタン */
 #layer-buttons {
   position: fixed;
 
@@ -56,6 +45,7 @@ body {
   gap: 10px;
 }
 
+/* 表示中 */
 .layer-button {
   width: 72px;
 
@@ -64,30 +54,27 @@ body {
   border: none;
   border-radius: 999px;
 
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 1);
   color: black;
 
   font-size: 13px;
   font-weight: bold;
 
-  box-shadow:
-    0 6px 18px rgba(0, 0, 0, 0.35);
+  opacity: 1;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 
   cursor: pointer;
 }
 
-.layer-button.active {
-  background: black;
-  color: white;
+/* 非表示中 */
+.layer-button.inactive {
+  opacity: 0.35;
 }
 
-/* =========================
-   iPhone / iPad 用
-========================= */
-
+/* iPhone / iPad 用 */
 #ios-ar {
   position: fixed;
-
   inset: 0;
 
   display: grid;
@@ -96,10 +83,7 @@ body {
   z-index: 20;
 }
 
-/* =========================
-   iPhone / iPad AR開始ボタン
-========================= */
-
+/* iPhone / iPad AR開始ボタン */
 #ios-ar-button {
   font-size: 22px;
   font-weight: bold;
@@ -112,16 +96,12 @@ body {
   background: white;
   color: black;
 
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
 
   cursor: pointer;
 }
 
-/* =========================
-   Android ARボタン共通
-========================= */
-
+/* Android ARボタン共通 */
 #ARButton {
   position: fixed !important;
 
@@ -138,8 +118,7 @@ body {
 
   font-weight: bold !important;
 
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.45) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important;
 
   z-index: 9999 !important;
 }
@@ -171,18 +150,12 @@ body {
 /* 読み込み中 */
 #ARButton.ar-loading {
   opacity: 0.45 !important;
-
   pointer-events: none !important;
-
   filter: grayscale(1);
-
   cursor: default !important;
 }
 
-/* =========================
-   canvas
-========================= */
-
+/* canvas */
 canvas {
   display: block;
 }
