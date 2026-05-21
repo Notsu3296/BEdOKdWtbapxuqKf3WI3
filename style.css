@@ -131,3 +131,17 @@ body {
 canvas {
   display: block;
 }
+
+/* =========================
+   読み込み中ボタン
+========================= */
+
+#ARButton.ar-loading {
+  opacity: 0.45 !important;
+
+  pointer-events: none !important;
+
+  filter: grayscale(1);
+
+  cursor: default !important;
+}
