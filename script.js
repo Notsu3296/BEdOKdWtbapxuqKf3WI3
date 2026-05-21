@@ -41,6 +41,13 @@ const MODEL_FILES = [
   "889_1"
 ];
 
+const LAYER_LABELS = {
+  "889_4": "第4層",
+  "889_3": "第3層",
+  "889_2": "第2層",
+  "889_1": "第1層"
+};
+
 const loadedModels = {};
 
 /*
@@ -301,7 +308,7 @@ function createLayerButtons() {
     const button = document.createElement("button");
 
     button.className = "layer-button";
-    button.textContent = name;
+    button.textContent = LAYER_LABELS[name];
     button.dataset.layer = name;
 
     button.classList.toggle(
