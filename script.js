@@ -357,12 +357,11 @@ function resetARState() {
     placedModel = null;
   }
 
-  if (arButton) {
-    arButton.classList.remove("ar-stop-button");
-    arButton.classList.add("ar-start-button");
-  }
-
-  setInfo("ARを終了しました。もう一度開始できます。");
+  // Android WebXRの白画面対策
+  // AR終了後、開始ページを再読み込みする
+  setTimeout(() => {
+    window.location.reload();
+  }, 150);
 }
 
 // =========================
