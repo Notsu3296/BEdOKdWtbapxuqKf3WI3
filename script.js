@@ -213,6 +213,11 @@ function onSelect() {
     return;
   }
 
+  // すでに配置済みなら、以降のタップでは再配置しない
+  if (placedGroup) {
+    return;
+  }
+
   if (Object.keys(loadedModels).length !== MODEL_FILES.length) {
     setInfo("モデルを読み込み中です。");
     return;
@@ -221,11 +226,6 @@ function onSelect() {
   if (!canPlace || !reticle.visible) {
     setInfo("端末をゆっくり動かして、白い輪を探してください。");
     return;
-  }
-
-  if (placedGroup) {
-    scene.remove(placedGroup);
-    placedGroup = null;
   }
 
   placedGroup = new THREE.Group();
