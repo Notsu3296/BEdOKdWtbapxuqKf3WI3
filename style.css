@@ -17,7 +17,7 @@ body {
 
   transform: translateX(-50%);
 
-  z-index: 10;
+  z-index: 20;
 
   width: min(90vw, 420px);
 
@@ -35,6 +35,50 @@ body {
 
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================
+   レイヤー切替ボタン
+========================= */
+
+#layer-buttons {
+  position: fixed;
+
+  right: 12px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  z-index: 30;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.layer-button {
+  width: 72px;
+
+  padding: 10px 8px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.88);
+  color: black;
+
+  font-size: 13px;
+  font-weight: bold;
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.35);
+
+  cursor: pointer;
+}
+
+.layer-button.active {
+  background: black;
+  color: white;
 }
 
 /* =========================
@@ -124,18 +168,7 @@ body {
   opacity: 0.72 !important;
 }
 
-/* =========================
-   canvas
-========================= */
-
-canvas {
-  display: block;
-}
-
-/* =========================
-   読み込み中ボタン
-========================= */
-
+/* 読み込み中 */
 #ARButton.ar-loading {
   opacity: 0.45 !important;
 
@@ -144,4 +177,12 @@ canvas {
   filter: grayscale(1);
 
   cursor: default !important;
+}
+
+/* =========================
+   canvas
+========================= */
+
+canvas {
+  display: block;
 }
