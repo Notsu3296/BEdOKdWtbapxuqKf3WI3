@@ -2,7 +2,6 @@
 <html lang="ja">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -15,14 +14,9 @@
     content="noindex"
   >
 
-  <title>
-    WebAR Layer Viewer
-  </title>
+  <title>WebAR Layer Viewer</title>
 
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
+  <link rel="stylesheet" href="style.css">
 
   <script type="importmap">
   {
@@ -32,80 +26,56 @@
     }
   }
   </script>
-
 </head>
 
 <body>
 
-  <!-- 上部メッセージ -->
-
   <div id="info"></div>
 
   <!-- iPhone / iPad 用 -->
-
   <div
     id="ios-ar"
     style="display: none;"
   >
-
     <a
       rel="ar"
-      href="./model/889_all.usdz"
+      href="./model/Statue01.usdz"
     >
-
       <button id="ios-ar-button">
-        ARで見る
+        START AR
       </button>
-
     </a>
-
   </div>
 
-  <!-- Android WebXR -->
-
+  <!-- Android WebXR 用 -->
   <script
     type="module"
-    src="script.js?v=55"
+    src="script.js?v=53"
   ></script>
 
-  <!-- iOS判定 -->
-
   <script>
-
     const isIOS =
-      /iPad|iPhone|iPod/.test(
-        navigator.userAgent
-      ) ||
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
       (
         navigator.platform === "MacIntel" &&
         navigator.maxTouchPoints > 1
       );
 
     const info =
-      document.getElementById(
-        "info"
-      );
+      document.getElementById("info");
 
     const iosAr =
-      document.getElementById(
-        "ios-ar"
-      );
+      document.getElementById("ios-ar");
 
     if (isIOS) {
-
-      iosAr.style.display =
-        "block";
+      iosAr.style.display = "grid";
 
       info.innerHTML =
-        "<p>iPhone / iPad<br>ARボタンを押してください</p>";
-
+        "<p>3Dモデル読み込み完了。<br>ARを開始してください。</p>";
     } else {
-
       info.innerHTML =
         "<p>Android<br>3Dモデルを読み込み中...</p>";
-
     }
-
   </script>
 
 </body>
