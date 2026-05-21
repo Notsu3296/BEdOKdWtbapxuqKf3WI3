@@ -186,7 +186,7 @@ function loadModel() {
       }
 
       setInfo(
-        "3Dモデル読み込み完了。<br>ARを開始してください。"
+        "3Dモデル読み込み完了。<br>ARを開始できます。"
       );
 
     },
