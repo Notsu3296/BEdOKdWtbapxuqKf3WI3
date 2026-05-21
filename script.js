@@ -67,18 +67,20 @@ function init() {
   );
 
   // ライト
-  const hemiLight = new THREE.HemisphereLight(
-    0xffffff,
-    0xbbbbff,
-    3
-  );
+  const hemiLight =
+    new THREE.HemisphereLight(
+      0xffffff,
+      0xbbbbff,
+      3
+    );
 
   scene.add(hemiLight);
 
-  const dirLight = new THREE.DirectionalLight(
-    0xffffff,
-    2
-  );
+  const dirLight =
+    new THREE.DirectionalLight(
+      0xffffff,
+      2
+    );
 
   dirLight.position.set(1, 2, 1);
 
@@ -105,7 +107,7 @@ function init() {
     renderer.domElement
   );
 
-  // iOSはQuick Look使用
+  // iOSはQuickLook使用
   if (!isIOS()) {
 
     checkWebXRSupport();
@@ -146,7 +148,7 @@ function isIOS() {
 }
 
 // =========================
-// WebXR確認
+// WebXR対応確認
 // =========================
 
 function checkWebXRSupport() {
@@ -189,21 +191,20 @@ function checkWebXRSupport() {
 
 function createARButton() {
 
-  const button = ARButton.createButton(
-    renderer,
-    {
-      requiredFeatures: ["hit-test"],
-      optionalFeatures: ["dom-overlay"],
-      domOverlay: {
-        root: document.body
+  const button =
+    ARButton.createButton(
+      renderer,
+      {
+        requiredFeatures: ["hit-test"],
+
+        optionalFeatures: ["dom-overlay"],
+
+        domOverlay: {
+          root: document.body
+        }
       }
-    }
-  );
+    );
 
-  // Stop AR を消す
-  button.style.display = "none";
-
-  // 独自クラス
   button.classList.add(
     "ar-button-center"
   );
@@ -220,7 +221,8 @@ function createARButton() {
 
 function loadModel() {
 
-  const loader = new GLTFLoader();
+  const loader =
+    new GLTFLoader();
 
   loader.load(
 
@@ -332,10 +334,12 @@ function onSelect() {
 
   }
 
-  // 既存モデル削除
+  // 既存削除
   if (placedModel) {
 
-    scene.remove(placedModel);
+    scene.remove(
+      placedModel
+    );
 
     placedModel = null;
 
@@ -368,12 +372,12 @@ function onSelect() {
   placedModel.position.y +=
     MODEL_OFFSET_Y;
 
-  // 床向きに合わせる
+  // 向き
   placedModel.quaternion.copy(
     quaternion
   );
 
-  // モデル回転補正
+  // 回転補正
   placedModel.rotateX(
     MODEL_ROTATION_X
   );
@@ -493,7 +497,7 @@ function render(timestamp, frame) {
 
     }
 
-    // HitTest
+    // Hit Test
     if (hitTestSource) {
 
       const hitTestResults =
