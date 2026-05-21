@@ -166,7 +166,7 @@ function loadModel() {
         MODEL_SCALE
       );
 
-      setInfo("ARを開始してください。");
+      setInfo("3Dモデル読み込み完了。<br>ARを開始してください。");
     },
 
     undefined,
